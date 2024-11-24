@@ -71,6 +71,16 @@ class SunsynkClient:
         body = await resp.json()
         return Battery(body['data'])
 
+    async def get_plant_day_usage(self, plant_id: str, date: str):
+        resp = await self.__get(f'api/v1/plant/energy/{plant_id}/day?lan=en&date={date}&id={plant_id}')
+        body = await resp.json()
+        return body['data']['infos']
+
+    async def get_plant_month_usage(self, plant_id: str, date: str):
+        resp = await self.__get(f'api/v1/plant/energy/{plant_id}/month?lan=en&date={date}&id={plant_id}')
+        body = await resp.json()
+        return body['data']['infos']
+
     async def __get(self, path: str, attempts: int = 1):
         resp = await self.session.get(self.__url(path), headers=self.__headers(), timeout=20)
         if resp.status == 401 and attempts == 1:
